@@ -1,0 +1,19 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+<img src="{% static 'images/Vector.svg' %}" class="Vector" />
+{% block content %}
+<div class="login">
+    <div class="form">
+        <form method="POST" novalidate>
+
+            {% csrf_token %}
+            <h2>Вход</h2>
+            {{form.as_p}}
+            <button value="Войти">Войти</button>
+            <br>
+            <a class="link" href="http://127.0.0.1:8000/register/">Зарегистрироваться</a>
+        </form>
+    </div>
+</div>
+{% endblock content%}
