@@ -1,10 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/book.css' %}">
+<nav>
+    <a href="http://127.0.0.1:8000/"><li>Главная</li></a>
+    <a href="http://127.0.0.1:8000/booking"><li>Запись</li></a>
+    <a href="http://127.0.0.1:8000/contacts"><li>Контакты и правила</li></a>
+    <a href=#><li>Аккаунт</li></a>
+</nav>
+{% block content %}
+{% endblock content%}

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
-from .forms import LoginForm, RegisterForm
+from .forms import LoginForm, RegisterForm, BookingForm
 
 
 def sign_up(request):
@@ -46,3 +46,24 @@ def sign_in(request):
 
 def book(request):
     return render(request, 'book/book.html', {})
+
+
+def booking(request):
+    return render(request, 'book/booking.html', {})
+
+
+def contacts(request):
+    return render(request, 'book/contacts.html', {})
+
+
+def book_form(request):
+    if request.method == 'GET':
+        form = BookingForm
+        return render(request, 'book_form.html', {'form': form})
+
+    if request.method == 'POST':
+        form = BookingForm(request.POST)
+        if form.is_valid():
+            return redirect('booking')
+        else:
+            return render(request, 'book_form.html', {'form': form})

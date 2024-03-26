@@ -1,0 +1,144 @@
+@import "https://fonts.googleapis.com/css?family=Raleway:0,700;0,900&display=swap";
+
+h2{
+    font-family: "Raleway", sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    color:#ED0D5E;
+}
+
+.book-container {
+    width: 1142px;
+    margin: 0 auto;
+  }
+  
+  
+  body {
+    background-color: #292929;
+  }
+  .book_box {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+  
+    padding: 50px 0;
+  }
+  .book_item {
+    -ms-flex-preferred-size: calc(33.33333% - 30px);
+    flex-basis: calc(33.33333% - 30px);
+  
+    margin: 0 15px 30px;
+  
+    overflow: hidden;
+  
+    border-radius: 28px;
+  }
+  .book-item_link {
+    display: block;
+    padding: 30px 20px;
+    background-color: #D9D9D9;
+  
+    overflow: hidden;
+  
+    position: relative;
+  }
+  .book-item_link:hover,
+  .book-item_link:hover .ag-courses-item_date {
+    text-decoration: none;
+    color: #FFF;
+  }
+  .book-item_link:hover .book-item_bg {
+    -webkit-transform: scale(10);
+    -ms-transform: scale(10);
+    transform: scale(10);
+  }
+  .book-item_title {
+    min-height: 87px;
+    margin: 0 0 25px;
+  
+    overflow: hidden;
+  
+    font-family: "Raleway", sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    color:#000;
+  
+    z-index: 2;
+    position: relative;
+  }
+  .book_date-box {
+    font-size: 18px;
+    color: #FFF;
+  
+    z-index: 2;
+    position: relative;
+  }
+  .book-item_date {
+    font-family: "Raleway", sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color:#000;
+  
+    -webkit-transition: color .5s ease;
+    -o-transition: color .5s ease;
+    transition: color .5s ease
+  }
+  .book-item_bg {
+    height: 128px;
+    width: 128px;
+    background-color: #ED0D5E;
+  
+    z-index: 1;
+    position: absolute;
+    top: -75px;
+    right: -75px;
+  
+    border-radius: 50%;
+  
+    -webkit-transition: all .5s ease;
+    -o-transition: all .5s ease;
+    transition: all .5s ease;
+  }
+
+  
+  
+  
+  @media only screen and (max-width: 979px) {
+    .book_item {
+      -ms-flex-preferred-size: calc(50% - 30px);
+      flex-basis: calc(50% - 30px);
+    }
+    .book-item_title {
+      font-size: 24px;
+    }
+  }
+  
+  @media only screen and (max-width: 767px) {
+    .book-container {
+      width: 96%;
+    }
+  
+  }
+  @media only screen and (max-width: 639px) {
+    .book_item {
+      -ms-flex-preferred-size: 100%;
+      flex-basis: 100%;
+    }
+    .book-item_title {
+      min-height: 72px;
+      line-height: 1;
+  
+      font-size: 24px;
+    }
+    .book-item_link {
+      padding: 22px 40px;
+    }
+    .book_date-box {
+      font-size: 16px;
+    }
+  }
