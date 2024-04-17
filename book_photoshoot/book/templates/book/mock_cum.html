@@ -8,22 +8,19 @@
     <div class="book-container">
         <h2>Екатеринбург</h2>
         <div class="book_box">
-            {% for book in books_ekb %}
           <div class="book_item">
             <a href="http://127.0.0.1:8000/booking/form" class="book-item_link">
               <div class="book-item_bg"></div>
               <div class="book-item_title">
-                {{book.date}}
+                21 мая
               </div>
               <div class="book_date-box">
                 <span class="book-item_date">
-                  {{book.time}}
+                  9:00
                 </span>
               </div>
             </a>
           </div>
-            {% endfor %}
-        </div>
       
         </div>
       </div>
@@ -33,8 +30,9 @@
 <div class="ufa">
     <div class="book-container">
         <h2>Уфа</h2>
+
         <div class="book_box">
-            {% for book in books_ufa %}
+            {% for user in users %}
           <div class="book_item">
             <a href="http://127.0.0.1:8000/booking/form" class="book-item_link">
               <div class="book-item_bg"></div>
@@ -43,13 +41,14 @@
               </div>
               <div class="book_date-box">
                 <span class="book-item_date">
-                  {{book.time}}
+                  {{user.last_name}}
                 </span>
               </div>
             </a>
           </div>
             {% endfor %}
         </div>
+
       </div>
 </div>
 </body>

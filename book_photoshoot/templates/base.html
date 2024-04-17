@@ -1,10 +1,13 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/book.css' %}">
-<nav>
-    <a href="http://127.0.0.1:8000/"><li>Главная</li></a>
-    <a href="http://127.0.0.1:8000/booking"><li>Запись</li></a>
-    <a href="http://127.0.0.1:8000/contacts"><li>Контакты и правила</li></a>
-    <a href=#><li>Аккаунт</li></a>
+<nav class="nav">
+    <ul class="menu-main">
+    <li><a href="http://127.0.0.1:8000/">Главная</a></li>
+    <li><a href="http://127.0.0.1:8000/booking">Запись</a></li>
+    <li><a href="http://127.0.0.1:8000/contacts">Контакты и правила</a></li>
+    <li><a href=#><img src="{% static 'images/account.png' %}" width="30px" height="30px" /></a></li>
+    <div id="indicator"></div>
+        </ul>
 </nav>
 {% block content %}
 {% endblock content%}
