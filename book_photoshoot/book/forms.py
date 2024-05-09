@@ -15,11 +15,8 @@ class RegisterForm(UserCreationForm):
         fields = ['username', 'email', 'password1', 'password2']
 
 
-class BookingForm(forms.Form):
-    user = forms.CharField(label='Имя', max_length=25)
-    number = forms.CharField(label='Номер телефона\ник телеграм', max_length=25)
-    description = forms.CharField(label='Описание', max_length=200)
-
+class BookingForm(forms.ModelForm):
     class Meta:
         model = Book
-        fields = ['user', 'number', 'description']
+        fields = ('number', 'description')
+        widgets = {'user': forms.HiddenInput()}

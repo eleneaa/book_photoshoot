@@ -2,9 +2,13 @@ from django.shortcuts import render
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
+from requests.auth import HTTPBasicAuth
+
 from .forms import LoginForm, RegisterForm, BookingForm
 import requests
 import json
+from django.shortcuts import render
+from django.http import HttpResponse
 
 
 def sign_up(request):
@@ -15,6 +19,14 @@ def sign_up(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
+            user = form.save(commit=False)
+            user.username = user.username.lower()
+            user.save()
+            response = send_data_to_api_server(
+                            form.cleaned_data['username'],
+                            form.cleaned_data['email'],
+                            form.cleaned_data['password1']
+                        )
             user = form.save(commit=False)
             user.username = user.username.lower()
             user.save()
@@ -31,7 +43,15 @@ def sign_in(request):
         return render(request, 'login.html', {'form': form})
     if request.method == 'POST':
         form = LoginForm(request.POST)
-
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        data = {
+                    'username': username,
+                    'password': password
+                }
+        json_data = json.dumps(data)
+        api_url = 'http://127.0.0.1:5000/users/authenticate'
+        response = requests.post(api_url, data=json_data, headers={'Content-Type': 'application/json'})
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
@@ -39,7 +59,8 @@ def sign_in(request):
             if user:
                 login(request, user)
                 messages.success(request, f'Hi {username.title()}, welcome back!')
-                return redirect('book')
+                return redirect('profile')
+
 
         # form is not valid or user is not authenticated
         messages.error(request, f'Invalid username or password')
@@ -50,6 +71,18 @@ def book(request):
     return render(request, 'book/book.html', {})
 
 
+def profile(request):
+    if request.method == 'GET':
+        apidata = requests.get("http://127.0.0.1:5000/books/occupied")
+        books = json.loads(apidata.content)
+        user_book = []
+        user = request.user.id
+        for book in books:
+            if book['fields']['user'] == user:
+                user_book.append(Book(get_date(book['fields']['date']), book['fields']['time'][:5], book['pk']))
+        return render(request, 'book/user_profile.html', {'user_books': user_book, 'user': request.user})
+
+
 def booking(request):
     if request.method == 'GET':
         apidata = requests.get("http://127.0.0.1:5000/books/free")
@@ -58,23 +91,26 @@ def booking(request):
         free_book_to_resp_ufa = []
         for book in free_book:
             if book['fields']['city'] == "Уфа":
-                free_book_to_resp_ufa.append(Book(get_date(book['fields']['date']), book['fields']['time'][:5]))
+                free_book_to_resp_ufa.append(Book(get_date(book['fields']['date']), book['fields']['time'][:5], book['pk']))
             elif book['fields']['city'] == "Екатеринбург":
-                free_book_to_resp_ekb.append(Book(get_date(book['fields']['date']), book['fields']['time'][:5]))
-        return render(request, 'book/booking.html', {'books_ufa': free_book_to_resp_ufa, 'books_ekb': free_book_to_resp_ekb})
+                free_book_to_resp_ekb.append(Book(get_date(book['fields']['date']), book['fields']['time'][:5], book['pk']))
+        return render(request, 'book/booking.html',
+                      {'books_ufa': free_book_to_resp_ufa, 'books_ekb': free_book_to_resp_ekb})
+
 
 def get_date(date):
     month_list = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
-           'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря']
+                  'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря']
     date_list = date.split('-')
     return (date_list[2] + ' ' +
-        month_list[int(date_list[1]) - 1])
+            month_list[int(date_list[1]) - 1])
+
 
 def contacts(request):
     return render(request, 'book/contacts.html', {})
 
 
-def book_form(request):
+def book_form(request, book_id):
     if request.method == 'GET':
         form = BookingForm
         return render(request, 'book_form.html', {'form': form})
@@ -82,6 +118,18 @@ def book_form(request):
     if request.method == 'POST':
         form = BookingForm(request.POST)
         if form.is_valid():
+            number = request.POST.get('number')
+            description = request.POST.get('description')
+            username = request.user.id
+            data = {
+                'number': number,
+                'description': description,
+                'book_id': book_id,
+                'username': username
+            }
+            json_data = json.dumps(data)
+            api_url = 'http://127.0.0.1:5000/books/occupied'
+            response = requests.post(api_url, data=json_data, headers={'Content-Type': 'application/json'})
             return redirect('booking')
         else:
             return render(request, 'book_form.html', {'form': form})
@@ -95,8 +143,87 @@ def book_form(request):
 #         for u in users:
 #             users_to_resp.append(User(u['fields']['first_name'], u['fields']['last_name']))
 #         return render(request, 'book/mock_cum.html', {'users': users_to_resp})
+# def login_view(request):
+#     if request.method == 'GET':
+#         form = LoginForm()
+#         return render(request, 'login.html', {'form': form})
+#     if request.method == 'POST':
+#         form = LoginForm(request.POST)
+#         # Получение данных из формы
+#         username = request.POST.get('username')
+#         password = request.POST.get('password')
+#
+#         # Формирование данных в формате JSON для отправки на API сервер
+#         data = {
+#             'username': username,
+#             'password': password
+#         }
+#         json_data = json.dumps(data)
+#
+#         # Отправка данных на API сервер в формате JSON
+#         api_url = 'http://127.0.0.1:5000/users/'
+#         response = requests.post(api_url, data=json_data, headers={'Content-Type': 'application/json'})
+#
+#         # Обработка ответа от API сервера
+#         if response.status_code == 200:
+#             # В случае успеха, выполните нужные действия на веб-сервере
+#             return redirect('book')
+#         else:
+#             # Обработка ошибки
+#             return HttpResponse('Ошибка авторизации')
+#
+#     else:
+#         # Логика для обработки GET запроса
+#         return render(request, 'login.html')
+#
+#
+def send_data_to_api_server(username, email, password):
+    url = "http://127.0.0.1:5000/users/register_user"
+    headers = {'content-type': 'application/json'}
+    api_username = 'admin'
+    api_password = 'admin'
+    payload = {
+        "method": "register_user",
+        "params": [username, email, password],
+        "username": username,
+        "email": email,
+        "password": password,
+        "jsonrpc": "2.0",
+        "id": 0,
+    }
+
+    response = requests.post(
+        url,
+        json=payload,
+        headers=headers,
+        auth=HTTPBasicAuth(api_username, api_password)  # Аутентификация
+    )
+    return response.json()
+#
+#
+# def register(request):
+#     if request.method == "POST":
+#         form = RegisterForm(request.POST)
+#         if form.is_valid():
+#             user = form.save(commit=False)
+#             user.username = user.username.lower()
+#             user.save()
+#             response = send_data_to_api_server(
+#                 form.cleaned_data['username'],
+#                 form.cleaned_data['email'],
+#                 form.cleaned_data['password1']
+#             )
+#             if response.get('status') == 'success':
+#                 return redirect('book')
+#             else:
+#                 return HttpResponse('Ошибка авторизации')
+#     else:
+#         form = RegisterForm()
+#
+#     return render(request, 'register.html', {'form': form})
 
 class Book():
-    def __init__(self, date, time):
+    def __init__(self, date, time, pk):
         self.date = date
         self.time = time
+        self.pk = pk

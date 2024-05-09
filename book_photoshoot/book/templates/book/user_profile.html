@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+        <h1>Hi {{ user.username }}!</h1>
+        <h2>Твои записи:</h2>
+        <ul>
+            {% for book in user_books %}
+                <li>{{ book.date }}</li>
+            {% endfor %}
+        </ul>
+{% else %}
+        <p>You are not logged in.</p>
+        <a href="{% url 'login' %}">Log In</a>
+{% endif %}
+
+{% endblock content%}

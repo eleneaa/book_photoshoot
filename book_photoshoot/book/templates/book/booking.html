@@ -10,7 +10,7 @@
         <div class="book_box">
             {% for book in books_ekb %}
           <div class="book_item">
-            <a href="http://127.0.0.1:8000/booking/form" class="book-item_link">
+            <a href="{% url 'form' %}{{book.pk}}" class="book-item_link">
               <div class="book-item_bg"></div>
               <div class="book-item_title">
                 {{book.date}}
@@ -36,7 +36,7 @@
         <div class="book_box">
             {% for book in books_ufa %}
           <div class="book_item">
-            <a href="http://127.0.0.1:8000/booking/form" class="book-item_link">
+            <a href="{% url 'form' %}{{book.pk}}" class="book-item_link">
               <div class="book-item_bg"></div>
               <div class="book-item_title">
                 {{book.date}}
