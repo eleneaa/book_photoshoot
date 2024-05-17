@@ -1,17 +1,84 @@
 {% extends 'base.html' %}
 {% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/book.css' %}">
 {% block content %}
+<body>
 {% if user.is_authenticated %}
-        <h1>Hi {{ user.username }}!</h1>
+        <h1>{{ user.username }}</h1>
+        <a href="#" class = 'edit_profile'>Редактировать профиль</a>
         <h2>Твои записи:</h2>
-        <ul>
-            {% for book in user_books %}
-                <li>{{ book.date }}</li>
+        {% if user_books_occupied %}
+        <div class="book-container">
+            <h3>Не подтверждённые: </h3>
+            <div class="book_box">
+            {% for book in user_books_occupied %}
+            <div class="book_item">
+            <a class="book-item_link">
+              <div class="book-item_bg"></div>
+              <div class="book-item_title">
+                {{book.date}}
+              </div>
+              <div class="book_date-box">
+                <span class="book-item_date">
+                  {{book.time}}
+                </span>
+              </div>
+                <a href="{% url 'cancel'%}{{book.pk}}" class="book-item_link cancel">ОТМЕНИТЬ</a>
+            </a>
+          </div>
             {% endfor %}
-        </ul>
+        </div>
+        </div>
+        {% endif %}
+        {% if user_books_confirmed %}
+            <div class="book-container">
+            <h3>Подтверждённые: </h3>
+            <div class="book_box">
+            {% for book in user_books_confirmed %}
+            <div class="book_item">
+            <a class="book-item_link">
+              <div class="book-item_bg"></div>
+              <div class="book-item_title">
+                {{book.date}}
+              </div>
+              <div class="book_date-box">
+                <span class="book-item_date">
+                  {{book.time}}
+                </span>
+              </div>
+                <a href="{% url 'cancel'%}{{book.pk}}" class="book-item_link cancel">ОТМЕНИТЬ</a>
+            </a>
+          </div>
+            {% endfor %}
+        </div>
+        </div>
+        {% endif %}
+        {% if user_books_last %}
+            <div class="book-container">
+            <h3>Прошедшие: </h3>
+            <div class="book_box">
+            {% for book in user_books_last %}
+            <div class="book_item">
+            <a class="book-item_link">
+              <div class="book-item_bg"></div>
+              <div class="book-item_title">
+                {{book.date}}
+              </div>
+              <div class="book_date-box">
+                <span class="book-item_date">
+                  {{book.time}}
+                </span>
+              </div>
+                <a href="{{book.url}}" class="book-item_link cancel">ССЫЛКА НА ФОТО</a>
+            </a>
+          </div>
+            {% endfor %}
+        </div>
+        </div>
+        {% endif %}
 {% else %}
         <p>You are not logged in.</p>
         <a href="{% url 'login' %}">Log In</a>
 {% endif %}
-
+</body>
 {% endblock content%}

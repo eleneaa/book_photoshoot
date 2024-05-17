@@ -53,21 +53,48 @@
   margin: 0 30px;
 }
 }
+a.edit_profile {
+    font-family: "Raleway", sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color:#D9D9D9;
+    padding-left: 30px;
+    text-decoration: none;
+    margin-top: 0;
+    padding-top: 0;
+}
+h1 {
+    font-family: "Raleway", sans-serif;
+    font-size: 100px;
+    font-weight: 700;
+    color:#D9D9D9;
+    padding-left: 30px;
+    padding-bottom: 0;
+    margin-bottom:0;
+}
 h2{
     font-family: "Raleway", sans-serif;
-    font-size: 36px;
+    font-size: 50px;
     font-weight: 700;
     color:#ED0D5E;
+    padding-left: 30px;
 }
-
+h3{
+    font-family: "Raleway", sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color:#D9D9D9;
+}
 .book-container {
-    width: 1142px;
+    width: 1300px;
     margin: 0 auto;
+
   }
   
   
   body {
     background-color: #292929;
+
   }
   .book_box {
     display: -webkit-box;
@@ -84,12 +111,18 @@ h2{
   .book_item {
     -ms-flex-preferred-size: calc(33.33333% - 30px);
     flex-basis: calc(33.33333% - 30px);
-  
     margin: 0 15px 30px;
-  
     overflow: hidden;
-  
     border-radius: 28px;
+  }
+  a.cancel {
+    font-family: "Raleway", sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color:#ED0D5E;
+    text-align: center;
+    text-decoration: none;
+
   }
   .book-item_link {
     display: block;

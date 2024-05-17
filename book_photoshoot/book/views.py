@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from requests.auth import HTTPBasicAuth
-
+from .constant import *
 from .forms import LoginForm, RegisterForm, BookingForm
 import requests
 import json
@@ -50,7 +50,7 @@ def sign_in(request):
                     'password': password
                 }
         json_data = json.dumps(data)
-        api_url = 'http://127.0.0.1:5000/users/authenticate'
+        api_url = SIGN_IN_URL
         response = requests.post(api_url, data=json_data, headers={'Content-Type': 'application/json'})
         if form.is_valid():
             username = form.cleaned_data['username']
@@ -73,27 +73,46 @@ def book(request):
 
 def profile(request):
     if request.method == 'GET':
-        apidata = requests.get("http://127.0.0.1:5000/books/occupied")
-        books = json.loads(apidata.content)
-        user_book = []
+        apidata_occupied = requests.get(OCCUPIED_BOOK_URL)
+        apidata_confirmed = requests.get(CONFIRMED_BOOK_URL)
+        apidata_last = requests.get(LAST_BOOK_URL)
+        books_occupied = json.loads(apidata_occupied.content)
+        books_confirmed = json.loads(apidata_confirmed.content)
+        books_last = json.loads(apidata_last.content)
+        user_book_occupied = []
+        user_book_confirmed = []
+        user_book_last = []
         user = request.user.id
-        for book in books:
+        for book in books_occupied:
             if book['fields']['user'] == user:
-                user_book.append(Book(get_date(book['fields']['date']), book['fields']['time'][:5], book['pk']))
-        return render(request, 'book/user_profile.html', {'user_books': user_book, 'user': request.user})
+                user_book_occupied.append(Book(get_date(book['fields']['date']), book['fields']['time'][:5],
+                                               book['fields']['url'], book['pk']))
+        for book in books_confirmed:
+            if book['fields']['user'] == user:
+                user_book_confirmed.append(Book(get_date(book['fields']['date']), book['fields']['time'][:5],
+                                                book['fields']['url'], book['pk']))
+        for book in books_last:
+            if book['fields']['user'] == user:
+                user_book_last.append(Book(get_date(book['fields']['date']), book['fields']['time'][:5],
+                                           book['fields']['url'], book['pk']))
+        return render(request, 'book/user_profile.html',
+                      dict(user_books_last=user_book_last, user_books_confirmed=user_book_confirmed,
+                           user_books_occupied=user_book_occupied, user=request.user))
 
 
 def booking(request):
     if request.method == 'GET':
-        apidata = requests.get("http://127.0.0.1:5000/books/free")
+        apidata = requests.get(FREE_BOOK_URL)
         free_book = json.loads(apidata.content)
         free_book_to_resp_ekb = []
         free_book_to_resp_ufa = []
         for book in free_book:
             if book['fields']['city'] == "Уфа":
-                free_book_to_resp_ufa.append(Book(get_date(book['fields']['date']), book['fields']['time'][:5], book['pk']))
+                free_book_to_resp_ufa.append(Book(get_date(book['fields']['date']), book['fields']['time'][:5],
+                                                  book['fields']['url'], book['pk']))
             elif book['fields']['city'] == "Екатеринбург":
-                free_book_to_resp_ekb.append(Book(get_date(book['fields']['date']), book['fields']['time'][:5], book['pk']))
+                free_book_to_resp_ekb.append(Book(get_date(book['fields']['date']), book['fields']['time'][:5],
+                                                  book['fields']['url'], book['pk']))
         return render(request, 'book/booking.html',
                       {'books_ufa': free_book_to_resp_ufa, 'books_ekb': free_book_to_resp_ekb})
 
@@ -128,57 +147,15 @@ def book_form(request, book_id):
                 'username': username
             }
             json_data = json.dumps(data)
-            api_url = 'http://127.0.0.1:5000/books/occupied'
+            api_url = OCCUPIED_BOOK_URL
             response = requests.post(api_url, data=json_data, headers={'Content-Type': 'application/json'})
             return redirect('booking')
         else:
             return render(request, 'book_form.html', {'form': form})
 
 
-# def api_mock(request):
-#     if request.method == 'GET':
-#         apidata = requests.get("http://127.0.0.1:5000/users/")
-#         users = json.loads(apidata.content)
-#         users_to_resp = []
-#         for u in users:
-#             users_to_resp.append(User(u['fields']['first_name'], u['fields']['last_name']))
-#         return render(request, 'book/mock_cum.html', {'users': users_to_resp})
-# def login_view(request):
-#     if request.method == 'GET':
-#         form = LoginForm()
-#         return render(request, 'login.html', {'form': form})
-#     if request.method == 'POST':
-#         form = LoginForm(request.POST)
-#         # Получение данных из формы
-#         username = request.POST.get('username')
-#         password = request.POST.get('password')
-#
-#         # Формирование данных в формате JSON для отправки на API сервер
-#         data = {
-#             'username': username,
-#             'password': password
-#         }
-#         json_data = json.dumps(data)
-#
-#         # Отправка данных на API сервер в формате JSON
-#         api_url = 'http://127.0.0.1:5000/users/'
-#         response = requests.post(api_url, data=json_data, headers={'Content-Type': 'application/json'})
-#
-#         # Обработка ответа от API сервера
-#         if response.status_code == 200:
-#             # В случае успеха, выполните нужные действия на веб-сервере
-#             return redirect('book')
-#         else:
-#             # Обработка ошибки
-#             return HttpResponse('Ошибка авторизации')
-#
-#     else:
-#         # Логика для обработки GET запроса
-#         return render(request, 'login.html')
-#
-#
 def send_data_to_api_server(username, email, password):
-    url = "http://127.0.0.1:5000/users/register_user"
+    url = SIGN_UP_URL
     headers = {'content-type': 'application/json'}
     api_username = 'admin'
     api_password = 'admin'
@@ -199,31 +176,19 @@ def send_data_to_api_server(username, email, password):
         auth=HTTPBasicAuth(api_username, api_password)  # Аутентификация
     )
     return response.json()
-#
-#
-# def register(request):
-#     if request.method == "POST":
-#         form = RegisterForm(request.POST)
-#         if form.is_valid():
-#             user = form.save(commit=False)
-#             user.username = user.username.lower()
-#             user.save()
-#             response = send_data_to_api_server(
-#                 form.cleaned_data['username'],
-#                 form.cleaned_data['email'],
-#                 form.cleaned_data['password1']
-#             )
-#             if response.get('status') == 'success':
-#                 return redirect('book')
-#             else:
-#                 return HttpResponse('Ошибка авторизации')
-#     else:
-#         form = RegisterForm()
-#
-#     return render(request, 'register.html', {'form': form})
+
+
+def cancel_book(request, book_id):
+    if request.method == 'GET':
+        url = ALL_BOOK_URL
+        apidata = dict(id=book_id)
+        json_data = json.dumps(apidata)
+        response = requests.post(url, data=json_data, headers={'Content-Type': 'application/json'})
+        return redirect('profile')
 
 class Book():
-    def __init__(self, date, time, pk):
+    def __init__(self, date, time, url, pk):
         self.date = date
         self.time = time
+        self.url = url
         self.pk = pk
