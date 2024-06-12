@@ -20,3 +20,7 @@ class BookingForm(forms.ModelForm):
         model = Book
         fields = ('number', 'description')
         widgets = {'user': forms.HiddenInput()}
+
+
+class ConfirmForm(forms.Form):
+    code = forms.CharField(label='Введите код: ')

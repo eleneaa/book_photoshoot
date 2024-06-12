@@ -7,8 +7,8 @@
     <div class="form">
 		<form method="POST" novalidate>
 			{% csrf_token %}
-			<h2>Запись</h2>
-
+			<h2>Подтверждения почты</h2>
+			<p>На вашу почту был отправлен код, введите его для подтверждения</p>
 			{% for field in form %}
 			<p>
 				{% if field.errors %}
@@ -21,7 +21,7 @@
 				{{ field.label_tag }} {{ field }}
 			</p>
 			{% endfor %}
-			<button>Записаться</button>
+			<button>Подтвердить</button>
 			<br>
 			<a class="link" href="{% url 'booking' %}">Назад</a>
 		</form>

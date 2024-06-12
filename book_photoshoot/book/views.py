@@ -1,10 +1,15 @@
+import random
+from base64 import b64encode, b64decode
+
+from django.contrib.auth.models import User
+from django.core.mail import send_mail
 from django.shortcuts import render
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from requests.auth import HTTPBasicAuth
 from .constant import *
-from .forms import LoginForm, RegisterForm, BookingForm
+from .forms import LoginForm, RegisterForm, BookingForm, ConfirmForm
 import requests
 import json
 from django.shortcuts import render
@@ -23,16 +28,17 @@ def sign_up(request):
             user.username = user.username.lower()
             user.save()
             response = send_data_to_api_server(
-                            form.cleaned_data['username'],
-                            form.cleaned_data['email'],
-                            form.cleaned_data['password1']
-                        )
+                form.cleaned_data['username'],
+                form.cleaned_data['email'],
+                form.cleaned_data['password1']
+            )
             user = form.save(commit=False)
             user.username = user.username.lower()
+            user.is_active = False
             user.save()
             messages.success(request, 'You have singed up successfully.')
             login(request, user)
-            return redirect('book')
+            return redirect('confirm_profile',username=user.username)
         else:
             return render(request, 'register.html', {'form': form})
 
@@ -46,9 +52,9 @@ def sign_in(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         data = {
-                    'username': username,
-                    'password': password
-                }
+            'username': username,
+            'password': password
+        }
         json_data = json.dumps(data)
         api_url = SIGN_IN_URL
         response = requests.post(api_url, data=json_data, headers={'Content-Type': 'application/json'})
@@ -60,7 +66,6 @@ def sign_in(request):
                 login(request, user)
                 messages.success(request, f'Hi {username.title()}, welcome back!')
                 return redirect('profile')
-
 
         # form is not valid or user is not authenticated
         messages.error(request, f'Invalid username or password')
@@ -186,9 +191,44 @@ def cancel_book(request, book_id):
         response = requests.post(url, data=json_data, headers={'Content-Type': 'application/json'})
         return redirect('profile')
 
+
 class Book():
     def __init__(self, date, time, url, pk):
         self.date = date
         self.time = time
         self.url = url
         self.pk = pk
+
+
+def confirm_profile(request,username):
+    user = User.objects.filter(username=username)[0]
+    message = str(user.pk) + '/' + user.username
+    message_bytes = message.encode('ascii')
+    base64_bytes = b64encode(message_bytes)
+    conf_code = base64_bytes.decode('ascii')
+    if request.method == 'GET':
+        form = ConfirmForm()
+        send_mail(subject="Код подтверждения аккаунта",
+                  message="Ваш код подтверждения: " + conf_code,
+                  from_email = 'ltbdadchg@yandex.ru',
+                  recipient_list=[user.email],
+                  fail_silently=False)
+        return render(request, 'confirmform.html', {'form': form})
+    if request.method == 'POST':
+        form = ConfirmForm(request.POST)
+        if form.is_valid():
+            code = request.POST.get('code')
+            base64_message = code
+            base64_bytes = base64_message.encode('ascii')
+            message_bytes = b64decode(base64_bytes)
+            message = message_bytes.decode('ascii').split('/')
+            if message[0] == str(user.pk) and message[1] == user.username:
+                user.is_active = True
+                user.save()
+                return redirect('profile')
+            else:
+                return render(request, 'confirmform.html', {'form': form})
+        else:
+            return render(request, 'confirmform.html', {'form': form})
+
+

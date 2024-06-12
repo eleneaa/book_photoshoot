@@ -2,23 +2,21 @@
 {% block content %}
 <html>
     <head>
-        <title>Django Girls blog</title>
+        <h1>Привет!</h1>
     </head>
     <body>
         <div>
-            <h1><a href="/">Django Girls Blog</a></h1>
+            <h2>Я Елена, фотограф. В моем портфолио более 50 креативных и коммерческих съемок, и я буду счастлива
+                запечатлеть вас!</h2>
         </div>
 
         <div>
-            <p>published: 14.06.2014, 12:14</p>
-            <h2><a href="">My first post</a></h2>
-            <p>Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+            <h3>Принципы моей работы: ваши искренние эмоции, творческое видение и воплощение самых смелых решений.</h3>
         </div>
 
         <div>
-            <p>published: 14.06.2014, 12:14</p>
-            <h2><a href="">My second post</a></h2>
-            <p>Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut f.</p>
+            <h3>Мое портфолио находится в блоке <a href="{% url 'contacts' %}">контактов</a>, а также вы можете
+                воспользоваться <a href="{% url 'booking' %}">сервисом бронирования!</a> </h3>
         </div>
     </body>
 </html>

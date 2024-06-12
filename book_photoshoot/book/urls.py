@@ -12,4 +12,5 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('profile/cancel/<int:book_id>/', views.cancel_book, name='cancel'),
     path('profile/cancel/', views.cancel_book, name='cancel'),
+    path('register/<str:username>/', views.confirm_profile, name='confirm_profile'),
 ]
