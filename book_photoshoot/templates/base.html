@@ -1,14 +1,15 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/book.css' %}">
-<section>
 <nav>
     <ul class="menuItems">
     <li><a href="{% url 'book' %}">Главная</a></li>
     <li><a href="{% url 'booking' %}">Запись</a></li>
     <li><a href="{% url 'contacts' %}">Контакты и правила</a></li>
-    <li><a href="{% url 'profile' %}"><img src="{% static 'images/account.png' %}" width="30px" height="30px" /></a></li>
+    <li><a href="{% url 'profile' %}"><img src="{% static 'images/account.png' %}" width="60px" height="60px" /></a></li>
     </ul>
 </nav>
-</section>
 {% block content %}
 {% endblock content%}
+<footer>
+
+</footer>

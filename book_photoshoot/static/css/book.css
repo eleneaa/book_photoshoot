@@ -1,58 +1,7 @@
 @import "https://fonts.googleapis.com/css?family=Raleway:0,700;0,900&display=swap";
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
 
-.menu-main {
-  list-style: none;
-  margin: 40px 0 5px;
-  padding: 25px 0 5px;
-  text-align: center;
-  background: white;
-}
-.menu-main li {display: inline-block;}
-.menu-main li:after {
-  content: "|";
-  color: #606060;
-  display: inline-block;
-  vertical-align:top;
-}
-.menu-main li:last-child:after {content: none;}
-.menu-main a {
-  text-decoration: none;
-  font-family: 'Ubuntu Condensed', sans-serif;
-  letter-spacing: 2px;
-  position: relative;
-  padding-bottom: 20px;
-  margin: 0 34px 0 30px;
-  font-size: 17px;
-  text-transform: uppercase;
-  display: inline-block;
-  transition: color .2s;
-}
-.menu-main a, .menu-main a:visited {color: #9d999d;}
-.menu-main a.current, .menu-main a:hover{color: #feb386;}
-.menu-main a:before,
-.menu-main a:after {
-  content: "";
-  position: absolute;
-  height: 4px;
-  top: auto;
-  right: 50%;
-  bottom: -5px;
-  left: 50%;
-  background: #feb386;
-  transition: .8s;
-}
-.menu-main a:hover:before, .menu-main .current:before {left: 0;}
-.menu-main a:hover:after, .menu-main .current:after {right: 0;}
-@media (max-width: 550px) {
-.menu-main {padding-top: 0;}
-.menu-main li {display: block;}
-.menu-main li:after {content: none;}
-.menu-main a {
-  padding: 25px 0 20px;
-  margin: 0 30px;
-}
-}
+
 a.edit_profile {
     font-family: "Raleway", sans-serif;
     font-size: 22px;
@@ -192,8 +141,6 @@ h3{
   }
 
 
-
-
   @media only screen and (max-width: 979px) {
     .book_item {
       -ms-flex-preferred-size: calc(50% - 30px);
@@ -228,3 +175,67 @@ h3{
       font-size: 16px;
     }
   }
+
+  body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  min-height: 100vh;
+  font-family: Hack, monospace;
+}
+
+div {
+  color: #727272;
+  text-align: center;
+}
+
+nav {
+  margin: 0;
+  background: url('/static/images/Vector.svg')  0% 0 no-repeat fixed;
+  padding: 16px;
+    .menuItems {
+      list-style: none;
+      display: flex;
+
+    li {
+      margin: 150px;
+      margin-top: 30px;
+      margin-bottom: 30px;
+
+    a {
+    text-decoration: none;
+    color: #D9D9D9;
+    font-size: 34px;
+    font-weight: 700;
+    transition: all 0.5s ease-in-out;
+    position: relative;
+    text-transform: uppercase;
+
+        &::before {
+          content: attr(data-item);
+          transition: 0.5s;
+          color: #8254ff;
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          width: 0;
+          overflow: hidden;
+        }
+
+        &:hover {
+          &::before {
+            width: 100%;
+            transition: all 0.5s ease-in-out;
+          }
+        }
+      }
+    }
+  }
+}

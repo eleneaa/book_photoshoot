@@ -5,7 +5,6 @@
 <body>
 {% if user.is_authenticated %}
         <h1>{{ user.username }}</h1>
-        <a href="#" class = 'edit_profile'>Редактировать профиль</a>
         <h2>Твои записи:</h2>
         {% if user_books_occupied %}
         <div class="book-container">
@@ -78,7 +77,7 @@
         {% endif %}
 {% else %}
         <h1>Войди в профиль, милашка =)</h1>
-        <a href="{% url 'login' %}">Log In</a>
+        <a href="{% url 'login' %}">Войти или зарегистрироваться</a>
 {% endif %}
 </body>
 {% endblock content%}
