@@ -1,6 +1,4 @@
 {% extends 'base.html' %}
-{% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/book.css' %}">
 {% block content %}
 <body>
 {% if user.is_authenticated %}
@@ -23,6 +21,7 @@
                 </span>
               </div>
                 <a href="{% url 'cancel'%}{{book.pk}}" class="book-item_link cancel">ОТМЕНИТЬ</a>
+                <a href="{{book.payment_url}}" class="book-item_link cancel">Внести предоплату</a>
             </a>
           </div>
             {% endfor %}

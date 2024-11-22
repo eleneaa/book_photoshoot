@@ -1,241 +1,215 @@
-@import "https://fonts.googleapis.com/css?family=Raleway:0,700;0,900&display=swap";
+@import "https://fonts.googleapis.com/css?family=Raleway:400,700,900&display=swap";
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
 
+body {
+    height: 100%;
+    background-color: #292929;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    min-height: 100vh;
+    font-family: Hack, monospace;
+}
 
-a.edit_profile {
+a {
     font-family: "Raleway", sans-serif;
     font-size: 22px;
     font-weight: 700;
-    color:#D9D9D9;
+    color: #D9D9D9;
     padding-left: 30px;
     text-decoration: none;
     margin-top: 0;
     padding-top: 0;
 }
-h1 {
+
+h1, h2, h3 {
     font-family: "Raleway", sans-serif;
+    color: #D9D9D9;
+    margin: 0;
+}
+
+h1 {
     font-size: 100px;
     font-weight: 700;
-    color:#D9D9D9;
     padding-left: 30px;
-    padding-bottom: 0;
-    margin-bottom:0;
 }
-h2{
-    font-family: "Raleway", sans-serif;
+
+h2 {
     font-size: 50px;
-    font-weight: 700;
-    color:#ED0D5E;
+    color: #ED0D5E;
     padding-left: 30px;
 }
-h3{
-    font-family: "Raleway", sans-serif;
+
+h3 {
     font-size: 24px;
-    font-weight: 700;
-    color:#D9D9D9;
 }
+
 .book-container {
     width: 1300px;
     margin: 0 auto;
+}
 
-  }
-
-
-  body {
-    background-color: #292929;
-
-  }
-  .book_box {
-    display: -webkit-box;
-    display: -ms-flexbox;
+.book_box {
     display: flex;
-    -webkit-box-align: start;
-    -ms-flex-align: start;
     align-items: flex-start;
-    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
-
     padding: 50px 0;
-  }
-  .book_item {
-    -ms-flex-preferred-size: calc(33.33333% - 30px);
+}
+
+.book_item {
     flex-basis: calc(33.33333% - 30px);
     margin: 0 15px 30px;
     overflow: hidden;
     border-radius: 28px;
-  }
-  a.cancel {
-    font-family: "Raleway", sans-serif;
-    font-size: 24px;
-    font-weight: 700;
-    color:#ED0D5E;
-    text-align: center;
-    text-decoration: none;
+}
 
-  }
-  .book-item_link {
+.book-item_link {
     display: block;
     padding: 30px 20px;
     background-color: #D9D9D9;
-
+    position: relative;
     overflow: hidden;
 
-    position: relative;
-  }
-  .book-item_link:hover,
-  .book-item_link:hover .ag-courses-item_date {
-    text-decoration: none;
-    color: #FFF;
-  }
-  .book-item_link:hover .book-item_bg {
-    -webkit-transform: scale(10);
-    -ms-transform: scale(10);
-    transform: scale(10);
-  }
-  .book-item_title {
+    &:hover,
+    &:hover .book-item_date {
+        text-decoration: none;
+        color: #FFF;
+    }
+
+    &:hover .book-item_bg {
+        transform: scale(10);
+    }
+}
+
+.book-item_title {
     min-height: 87px;
     margin: 0 0 25px;
-
-    overflow: hidden;
-
-    font-family: "Raleway", sans-serif;
     font-size: 36px;
     font-weight: 700;
-    color:#000;
-
-    z-index: 2;
+    color: #000;
     position: relative;
-  }
-  .book_date-box {
+    overflow: hidden;
+}
+
+.book-item_date, .book_date-box {
     font-size: 18px;
     color: #FFF;
+}
 
-    z-index: 2;
-    position: relative;
-  }
-  .book-item_date {
-    font-family: "Raleway", sans-serif;
+.book-item_date {
     font-size: 32px;
     font-weight: 700;
-    color:#000;
+    color: #000;
+    transition: color .5s ease;
+}
 
-    -webkit-transition: color .5s ease;
-    -o-transition: color .5s ease;
-    transition: color .5s ease
-  }
-  .book-item_bg {
+.book-item_bg {
     height: 128px;
     width: 128px;
     background-color: #ED0D5E;
-
-    z-index: 1;
     position: absolute;
     top: -75px;
     right: -75px;
-
     border-radius: 50%;
-
-    -webkit-transition: all .5s ease;
-    -o-transition: all .5s ease;
     transition: all .5s ease;
-  }
+}
 
-
-  @media only screen and (max-width: 979px) {
-    .book_item {
-      -ms-flex-preferred-size: calc(50% - 30px);
-      flex-basis: calc(50% - 30px);
-    }
-    .book-item_title {
-      font-size: 24px;
-    }
-  }
-
-  @media only screen and (max-width: 767px) {
-    .book-container {
-      width: 96%;
-    }
-
-  }
-  @media only screen and (max-width: 639px) {
-    .book_item {
-      -ms-flex-preferred-size: 100%;
-      flex-basis: 100%;
-    }
-    .book-item_title {
-      min-height: 72px;
-      line-height: 1;
-
-      font-size: 24px;
-    }
-    .book-item_link {
-      padding: 22px 40px;
-    }
-    .book_date-box {
-      font-size: 16px;
-    }
-  }
-
-  body {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  min-height: 100vh;
-  font-family: Hack, monospace;
+a.cancel {
+    font-family: "Raleway", sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #ED0D5E;
+    text-align: center;
+    text-decoration: none;
 }
 
 div {
-  color: #727272;
-  text-align: center;
+    color: #727272;
+    text-align: center;
 }
 
 nav {
-  margin: 0;
-  background: url('/static/images/Vector.svg')  0% 0 no-repeat fixed;
-  padding: 16px;
-    .menuItems {
-      list-style: none;
-      display: flex;
+    margin: 0;
+    background: url('/static/images/Vector.svg') 0% 0 no-repeat fixed;
+    padding: 16px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    height: 60px;
+}
 
-    li {
-      margin: 150px;
-      margin-top: 30px;
-      margin-bottom: 30px;
+.menuItems {
+    list-style: none;
+    display: flex;
+}
+
+.menuItems li {
+    margin: 150px 0 30px;
 
     a {
-    text-decoration: none;
-    color: #D9D9D9;
-    font-size: 34px;
-    font-weight: 700;
-    transition: all 0.5s ease-in-out;
-    position: relative;
-    text-transform: uppercase;
+        text-decoration: none;
+        color: #D9D9D9;
+        font-size: 34px;
+        font-weight: 700;
+        transition: all 0.5s ease-in-out;
+        position: relative;
+        text-transform: uppercase;
 
         &::before {
-          content: attr(data-item);
-          transition: 0.5s;
-          color: #8254ff;
-          position: absolute;
-          top: 0;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          width: 0;
-          overflow: hidden;
+            content: attr(data-item);
+            transition: 0.5s;
+            color: #8254ff;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            overflow: hidden;
         }
 
-        &:hover {
-          &::before {
+        &:hover::before {
             width: 100%;
-            transition: all 0.5s ease-in-out;
-          }
         }
-      }
     }
-  }
+}
+
+@media only screen and (max-width: 979px) {
+    .book_item {
+        flex-basis: calc(50% - 30px);
+    }
+
+    .book-item_title {
+        font-size: 24px;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .book-container {
+        width: 96%;
+    }
+}
+
+@media only screen and (max-width: 639px) {
+    .book_item {
+        flex-basis: 100%;
+    }
+
+    .book-item_title {
+        min-height: 72px;
+        line-height: 1;
+        font-size: 24px;
+    }
+
+    .book-item_link {
+        padding: 22px 40px;
+    }
+
+    .book_date-box {
+        font-size: 16px;
+    }
 }

@@ -1,6 +1,7 @@
 from django.urls import path, include
 from . import views
 
+
 urlpatterns = [
     path('', views.book, name='book'),
     path('register/', views.sign_up, name='register'),
@@ -13,4 +14,9 @@ urlpatterns = [
     path('profile/cancel/<int:book_id>/', views.cancel_book, name='cancel'),
     path('profile/cancel/', views.cancel_book, name='cancel'),
     path('register/<str:username>/', views.confirm_profile, name='confirm_profile'),
+    path('price/', views.price, name='price'),
+    #path('profile/pay', views.pay, name='pay'),
+    path('profile/pay/sucsess', views.success_pay, name='success'),
+    path('profile/pay/fail', views.fail_pay, name='fail'),
+    path('profile/pay/result', views.result_pay, name='result'),
 ]

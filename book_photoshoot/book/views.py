@@ -1,19 +1,20 @@
-import random
+import json
 from base64 import b64encode, b64decode
 
+import requests
+from django.contrib import messages
+from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
+from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.shortcuts import render
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.contrib.auth import login, authenticate, logout
+from django.views.decorators.csrf import csrf_exempt
 from requests.auth import HTTPBasicAuth
+
+from robokassa import *
 from .constant import *
 from .forms import LoginForm, RegisterForm, BookingForm, ConfirmForm
-import requests
-import json
-from django.shortcuts import render
-from django.http import HttpResponse
 
 
 def sign_up(request):
@@ -90,8 +91,12 @@ def profile(request):
         user = request.user.id
         for book in books_occupied:
             if book['fields']['user'] == user:
+                payment_url = generate_payment_link(merchant_login='booking_service', merchant_password_1='GhM5hJ522u',
+                                                    cost=500, number=book['pk'], description=str(book['pk']) +
+                                                    book['fields']['city'] + get_date(book['fields']['date']) +
+                                                    str(book['fields']['time'][:5]))
                 user_book_occupied.append(Book(get_date(book['fields']['date']), book['fields']['time'][:5],
-                                               book['fields']['url'], book['pk']))
+                                               book['fields']['url'], book['pk'], payment_url))
         for book in books_confirmed:
             if book['fields']['user'] == user:
                 user_book_confirmed.append(Book(get_date(book['fields']['date']), book['fields']['time'][:5],
@@ -193,11 +198,12 @@ def cancel_book(request, book_id):
 
 
 class Book():
-    def __init__(self, date, time, url, pk):
+    def __init__(self, date, time, url, pk, payment_url='cumshot'):
         self.date = date
         self.time = time
         self.url = url
         self.pk = pk
+        self.payment_url = payment_url
 
 
 def confirm_profile(request,username):
@@ -210,7 +216,7 @@ def confirm_profile(request,username):
         form = ConfirmForm()
         send_mail(subject="Код подтверждения аккаунта",
                   message="Ваш код подтверждения: " + conf_code,
-                  from_email = 'ltbdadchg@yandex.ru',
+                  from_email = 'book.photoshoot@yandex.ru',
                   recipient_list=[user.email],
                   fail_silently=False)
         return render(request, 'confirmform.html', {'form': form})
@@ -232,3 +238,67 @@ def confirm_profile(request,username):
             return render(request, 'confirmform.html', {'form': form})
 
 
+def price(request):
+    return render(request, 'price.html')
+
+
+def success_pay(request):
+    return render(request, 'book/success_pay.html')
+
+
+def fail_pay(request):
+    return render(request, 'book/failed_pay.html')
+
+@csrf_exempt
+def result_pay(request):
+    if request.method == 'POST':
+
+        order_id = request.POST.get('OutSum')
+        payment_status = request.POST.get('InvId')
+        data = {
+            'book_id': payment_status,
+        }
+        json_data = json.dumps(data)
+        api_url = OCCUPIED_BOOK_URL
+        response = requests.post(api_url, data=json_data, headers={'Content-Type': 'application/json'})
+
+        return HttpResponse('OK')  # Возврат подтверждения успешной обработки
+
+    return HttpResponse(status=405)  # Обработка только POST-запросов
+
+
+@csrf_exempt
+def result_pay(request):
+    if request.method == 'POST':
+        # Получите необходимые параметры из запроса
+        out_summ = request.POST.get('OutSum')
+        inv_id = request.POST.get('InvId')
+        sign = request.POST.get('SignatureValue')
+        payment_status = request.POST.get('PaymentStatus')  # Пример параметра для статуса платежа
+
+        # Создание строки подписи для проверки (отсортированные параметры объединенные с секретными ключами)
+        secret_key = "Ваш_секретный_ключ"  # Замените на ваш секретный ключ
+        signature_check_str = f"{out_summ}:{inv_id}:{secret_key}"
+        signature_check = hashlib.md5(signature_check_str.encode('utf-8')).hexdigest()
+
+        # Проверка подписи
+        if sign.lower() != signature_check.lower():
+            return HttpResponse("bad sign", status=400)
+
+        # Обработка статуса платежа
+        if payment_status == 'success':
+            data = {
+                'book_id': inv_id,
+            }
+            json_data = json.dumps(data)
+            api_url = CONFIRMED_BOOK_URL
+            response = requests.post(api_url, data=json_data, headers={'Content-Type': 'application/json'})
+
+        else:
+            return HttpResponse("bad sign", status=400)
+
+
+        # Возврат HTTP 200 для подтверждения успешной обработки
+        return HttpResponse("OK")
+
+    return HttpResponse(status=405)  # Обработка только POST-запросов
