@@ -8,25 +8,26 @@
 ## Установка
 
 1. Склонируйте репозиторий:
-   ```
-   git clone https://github.com/eleneaa/book_photoshoot
+  ```
+git clone https://github.com/eleneaa/book_photoshoot
+  ```
   
 2. Перейдите в папку проекта:
   ```
 cd book_photoshoot
-```
+  ```
 
 3. Установите зависимости:
   ```
-  pip install -r requirements.txt
-```
+pip install -r requirements.txt
+  ```
 
 4. Примените миграции для настройки базы данных:
   ```
-  python manage.py migrate
-```
+python manage.py migrate
+  ```
 
 5. Запустите сервер локально:
-   ```
-   python manage.py runserver
-   ```
+  ```
+python manage.py runserver
+  ```
