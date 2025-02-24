@@ -29,4 +29,4 @@ cd book_photoshoot
 5. Запустите сервер локально:
    ```
    python manage.py runserver
-```
+   ```
